@@ -1,10 +1,10 @@
 import sys
 import os
 from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
-from sqlalchemy.ext.declartive import declartive_base
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-Base = declartive_base()
+Base = declarative_base()
 
 
 class CPU(Base):
