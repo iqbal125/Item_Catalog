@@ -1,8 +1,8 @@
-{%extends "base.html"%}
+{% extends "base.html"%}
 {% block content %}
   <div>
     {% for cpu in cpus %}
-        {{cpu}}
+         {{cpu.name}}
     {% endfor %}
   </div>
 {% endblock %}
