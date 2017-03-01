@@ -7,14 +7,17 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link type="text/css" rel="stylesheet" href="/static/style.css" />
+  <link rel=stylesheet href="{{url_for('static', filename='style.css')}}">
+  <!-- <link rel="stylesheet" href="/static/style.css"> -->
  </head>
 <body>
  <div class="container-fluid">
   <div class="row">
    <div class="col-md-2"></div>
    <div class="col-md-8">
-     <div class="title"></div>
+     <span class="titleD">Design a High-End CPU</span>
+     <ul class="NavBarD">
+     </ul>
      <div class="content">
      {% block content %}
      {% endblock %}

@@ -6,20 +6,50 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
+class User(Base):
+    __tablename__ = 'User'
 
-class CPU(Base):
-    __tablename__ = "cpu"
+    id = Column(Integer, primary_key = True)
+    name = Column(String(255), nullable = False)
+    email = Column(String(255))
+
+class Category(Base):
+    __tablename__ = "Category"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
 
-class GPU(Base):
-    __tablename__ = "gpu"
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'id': self.id,
+        }
+
+
+class Item(Base):
+    __tablename__ = "Item"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
+    name = Column(String(100), nullable=False)
+    description = Column(String(1000))
+    price = Column(String(12))
+    category = relationship(Category)
+    category_id = Column(Integer, ForeignKey('Category.id'))
+    user = relationship(User)
+    user_id = Column(Integer, ForeignKey('User.id'))
 
 
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'description': self.description,
+            'id': self.id,
+            'price': self.price
+        }
 
 
 engine = create_engine('sqlite:///catalog.db')
