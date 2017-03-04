@@ -1,0 +1,54 @@
+
+.NavBarD {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+}
+
+.titleD {
+  text-align: center;
+  padding: 10px;
+  border: 2px solid black;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 16px;
+  color: green;
+}
+
+
+ ul li a:hover {
+  color: grey;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  float: left;
+}
+
+ ul li a:link {
+  color: grey;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  float: left;
+}
+
+ul li a:visited {
+  color: grey;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  float: left;
+}
+
+ ul li a:hover {
+  color: grey;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  float: left;
+}
