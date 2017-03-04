@@ -19,9 +19,8 @@ session = DBSession()
 
 app = Flask(__name__)
 
-CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Catalog "
+CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
+APPLICATION_NAME = "Catalog"
 
 session.add_all([Category(name = "CPU"),
                  Category(name = "GPU"),
@@ -31,10 +30,9 @@ session.add_all([Category(name = "CPU"),
                  Category(name = "MB")])
 session.commit()
 
-
+@app.route('/login')
 def showLogin():
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                    for x in xrange(32))
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)for x in xrange(32))
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
@@ -47,11 +45,8 @@ def fbconnect():
         return response
     access_token = request.data
     print "access token received %s " % access_token
-
-    app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
-        'web']['app_id']
-    app_secret = json.loads(
-        open('fb_client_secrets.json', 'r').read())['web']['app_secret']
+    app_id = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_id']
+    app_secret = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_secret']
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
         app_id, app_secret, access_token)
     h = httplib2.Http()
@@ -101,7 +96,7 @@ def fbconnect():
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
 
-    flash("Now logged in as %s" % login_session['username'])
+    alert("Now logged in as %s" % login_session['username'])
     return output
 
 
@@ -203,7 +198,7 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
+    alert("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
 
@@ -282,7 +277,7 @@ def newCategory():
     if request.method == 'POST':
         newCategory = Category(name=request.form['name'], user_id=login_session['user_id'])
         session.add(newCategory)
-        flash('New Category %s Successfully Created' % newCategory.name)
+        alert('New Category %s Successfully Created' % newCategory.name)
         session.commit()
         return redirect(url_for('showCategory'))
     else:
@@ -299,7 +294,7 @@ def editCategory(category_id):
     if request.method == 'POST':
         if request.form['name']:
             editedCategory.name = request.form['name']
-            flash('Category Successfully Edited %s' % editedCategory.name)
+            alert('Category Successfully Edited %s' % editedCategory.name)
             return redirect(url_for('showCategory'))
     else:
         return render_template('editcategory.html', category=editedCategory)
@@ -314,7 +309,7 @@ def deleteCategory(category_id):
         return 'You are not authorized to delete this category. Please create your own category in order to delete.'
     if request.method == 'POST':
         session.delete(CategoryToDelete)
-        flash('%s Successfully Deleted' % CategoryToDelete.name)
+        alert('%s Successfully Deleted' % CategoryToDelete.name)
         session.commit()
         return redirect(url_for('showCategory', category_id=category_id))
     else:
@@ -349,7 +344,7 @@ def newItem(category_id):
                                 category_id=category_id, user_id=category.user_id)
             session.add(newItem)
             session.commit()
-            flash('New %s Item Successfully Created' % (newItem.name))
+            alert('New %s Item Successfully Created' % (newItem.name))
             return redirect(url_for('showItem', category_id=category_id))
     else:
         return render_template('newitem.html', category_id=category_id)
@@ -372,7 +367,7 @@ def editItem(category_id, item_id):
             editedItem.price = request.form['price']
         session.add(editedItem)
         session.commit()
-        flash('Item Successfully Edited')
+        alert('Item Successfully Edited')
         return redirect(url_for('showItem', category_id=category_id))
     else:
         return render_template('edititem.html', category_id=category_id, item_id=item_id, item=editedItem)
@@ -389,7 +384,7 @@ def deleteItem(category_id, item_id):
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
-        flash('Item Successfully Deleted')
+        alert('Item Successfully Deleted')
         return redirect(url_for('showItem', category_id=category_id))
     else:
         return render_template('delitem.html', item=itemToDelete)
@@ -410,10 +405,10 @@ def disconnect():
         del login_session['picture']
         del login_session['user_id']
         del login_session['provider']
-        flash("You have successfully been logged out.")
+        alert("You have successfully been logged out.")
         return redirect(url_for('showCategorys'))
     else:
-        flash("You were not logged in")
+        alert("You were not logged in")
         return redirect(url_for('showCategorys'))
 
 
