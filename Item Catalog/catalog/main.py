@@ -86,7 +86,7 @@ def newCategory():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newCategory = Category(name=request.form['name'])
+        newCategory = Category(name=request.form['name'], user_id=login_session['user_id'])
         session.add(newCategory)
         flash('New Category %s Successfully Created' % newCategory.name)
         session.commit()
@@ -131,11 +131,12 @@ def deleteCategory(category_id):
 @app.route('/category/<int:category_id>/item/')
 def showItem(category_id):
     # category = session.query(Category).filter_by(id=category_id).one()
-    items = session.query(Item).all()
+    items = session.query(Item).filter_by(id=category_id).all()
+    print "items:", items
     if 'username' not in login_session:
         return redirect('/login')
     else:
-        return render_template('showitem.html')
+        return render_template('showitem.html', items=items)
 
 #Create a new item
 @app.route('/category/<int:category_id>/item/new/', methods=['GET', 'POST'])

@@ -19,6 +19,8 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
+    user = relationship(User)
+    user_id = Column(Integer, ForeignKey('User.id'))
 
     @property
     def serialize(self):
