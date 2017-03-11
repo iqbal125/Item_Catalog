@@ -63,22 +63,23 @@ def CategoriesJSON():
     categories = session.query(Category).all()
     return jsonify(categories=[r.serialize for r in categories])
 
-#Show all categories
-@app.route('/')
-@app.route('/category/')
-def showCategory():
-    categories = session.query(Category)
-    if 'username' not in login_session:
-        return render_template('frontpage.html', categories=categories)
-    else:
-        return render_template('frontpage.html', categories=categories)
-
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)for x in xrange(32))
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
     return render_template('login.html', STATE=state)
+
+#Show all categories
+@app.route('/')
+@app.route('/category/<int:category_id>')
+def showCategory(category_id):
+    categories = session.query(Category).all()
+    print category_id
+    if 'username' not in login_session:
+        return render_template('login.html')
+    else:
+        return render_template('frontpage.html', categories=categories)
 
 #Create a new category
 @app.route('/category/new/', methods=['GET', 'POST'])
@@ -130,8 +131,7 @@ def deleteCategory(category_id):
 @app.route('/category/<int:category_id>/')
 @app.route('/category/<int:category_id>/item/')
 def showItem(category_id):
-    # category = session.query(Category).filter_by(id=category_id).one()
-    items = session.query(Item).filter_by(id=category_id).all()
+    items = session.query(Item).filter_by(category_id=category_id).all()
     print "items:", items
     if 'username' not in login_session:
         return redirect('/login')
@@ -158,9 +158,6 @@ def editItem(category_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(Item).filter_by(id=item_id).one()
-    category = session.query(Category).filter_by(id=category_id).one()
-    if login_session['user_id'] != category.user_id:
-        return "You are not authorized to edit items on this category. Please create your own category in order to edit items."
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -180,10 +177,7 @@ def editItem(category_id, item_id):
 def deleteItem(category_id, item_id):
     if 'username' not in login_session:
         return redirect('/login')
-    category = session.query(Category).filter_by(id=category_id).one()
     itemToDelete = session.query(Item).filter_by(id=item_id).one()
-    if login_session['user_id'] != category.user_id:
-        return 'You are not authorized to delete items on this category. Please create your own category in order to delete items.'
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()

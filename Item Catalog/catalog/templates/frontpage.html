@@ -1,8 +1,7 @@
 {% extends "base.html"%}
 {% block content %}
 {% for cat in categories %}
-  {{cat.name}}
-  {{cat.id}}
+  <button><a href="{{url_for('showCategory', category_id=cat.id)}}">{{cat.name}}</a></button>
   <br>
   <br>
 {%endfor%}
