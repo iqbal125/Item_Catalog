@@ -128,12 +128,12 @@ def deleteCategory(category_id):
 @app.route('/category/<int:category_id>/')
 @app.route('/category/<int:category_id>/item/')
 def showItem(category_id):
-    category_id = session.query(Category).filter_by(id=category_id).one()
+    item = session.query(Item).filter_by(category_id=category_id).first()
     items = session.query(Item).filter_by(category_id=category_id).all()
     if 'username' not in login_session:
         return redirect('/login')
     else:
-        return render_template('showitem.html', items=items, category_id=category_id)
+        return render_template('showitem.html', items=items, category_id=category_id, item=item)
 
 #Create a new item
 @app.route('/category/<int:category_id>/item/new/', methods=['GET', 'POST'])
