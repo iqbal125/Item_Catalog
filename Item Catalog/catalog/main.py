@@ -2,7 +2,7 @@ from time import strftime
 import os
 import jinja2
 import requests
-from flask import Flask, render_template, request, redirect, url_for, make_response, flash
+from flask import Flask, render_template, request, redirect, url_for, make_response
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from database_setup import User, Category, Item
@@ -44,8 +44,6 @@ def getUserID(email):
     except:
         return None
 
-# def getItem
-
 # JSON APIs to view Category Information
 @app.route('/category/<int:category_id>/item/JSON')
 def CategoryJSON(category_id):
@@ -63,6 +61,8 @@ def CategoriesJSON():
     categories = session.query(Category).all()
     return jsonify(categories=[r.serialize for r in categories])
 
+
+
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)for x in xrange(32))
@@ -72,14 +72,14 @@ def showLogin():
 
 #Show all categories
 @app.route('/')
-@app.route('/category/<int:category_id>')
-def showCategory(category_id):
+@app.route('/category/')
+def showFront():
+    return render_template('frontpage.html')
+
+@app.route('/categories', methods=["GET", 'POST'])
+def showCategories():
     categories = session.query(Category).all()
-    print category_id
-    if 'username' not in login_session:
-        return render_template('login.html')
-    else:
-        return render_template('frontpage.html', categories=categories)
+    return render_template('categories.html', categories=categories)
 
 #Create a new category
 @app.route('/category/new/', methods=['GET', 'POST'])
@@ -89,9 +89,8 @@ def newCategory():
     if request.method == 'POST':
         newCategory = Category(name=request.form['name'], user_id=login_session['user_id'])
         session.add(newCategory)
-        flash('New Category %s Successfully Created' % newCategory.name)
         session.commit()
-        return redirect(url_for('showCategory'))
+        return redirect(url_for('showFront'))
     else:
         return render_template('newcategory.html')
 
@@ -106,8 +105,7 @@ def editCategory(category_id):
     if request.method == 'POST':
         if request.form['name']:
             editedCategory.name = request.form['name']
-            flash('Category Successfully Edited %s' % editedCategory.name)
-            return redirect(url_for('showCategory'))
+            return redirect(url_for('showFront'))
     else:
         return render_template('editcategory.html', category=editedCategory)
 
@@ -121,9 +119,8 @@ def deleteCategory(category_id):
         return 'You are not authorized to delete this category. Please create your own category in order to delete.'
     if request.method == 'POST':
         session.delete(CategoryToDelete)
-        flash('%s Successfully Deleted' % CategoryToDelete.name)
         session.commit()
-        return redirect(url_for('showCategory', category_id=category_id))
+        return redirect(url_for('showFront', category_id=category_id))
     else:
         return render_template('delcategory.html', category=CategoryToDelete)
 
@@ -131,12 +128,12 @@ def deleteCategory(category_id):
 @app.route('/category/<int:category_id>/')
 @app.route('/category/<int:category_id>/item/')
 def showItem(category_id):
+    category_id = session.query(Category).filter_by(id=category_id).one()
     items = session.query(Item).filter_by(category_id=category_id).all()
-    print "items:", items
     if 'username' not in login_session:
         return redirect('/login')
     else:
-        return render_template('showitem.html', items=items)
+        return render_template('showitem.html', items=items, category_id=category_id)
 
 #Create a new item
 @app.route('/category/<int:category_id>/item/new/', methods=['GET', 'POST'])
@@ -147,7 +144,6 @@ def newItem(category_id):
         newItem = Item(name=request.form['name'], description=request.form['description'], price=request.form['price'], category_id=category_id)
         session.add(newItem)
         session.commit()
-        flash('New %s Item Successfully Created' % (newItem.name))
         return redirect(url_for('showItem', category_id=category_id))
     else:
         return render_template('newitem.html', category_id=category_id)
@@ -167,7 +163,6 @@ def editItem(category_id, item_id):
             editedItem.price = request.form['price']
         session.add(editedItem)
         session.commit()
-        flash('Item Successfully Edited')
         return redirect(url_for('showItem', category_id=category_id))
     else:
         return render_template('edititem.html', category_id=category_id, item_id=item_id, item=editedItem)
@@ -181,7 +176,6 @@ def deleteItem(category_id, item_id):
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
-        flash('Item Successfully Deleted')
         return redirect(url_for('showItem', category_id=category_id))
     else:
         return render_template('delitem.html', item=itemToDelete)
@@ -200,11 +194,9 @@ def logout():
         del login_session['picture']
         del login_session['user_id']
         del login_session['provider']
-        flash("You have successfully been logged out.")
-        return redirect(url_for('showCategory'))
+        return redirect(url_for('showFront'))
     else:
-        flash("You were not logged in")
-        return redirect(url_for('showCategory'))
+        return redirect(url_for('showFront'))
 
 @app.route('/fbconnect', methods=['POST'])
 def fbconnect():
@@ -213,7 +205,6 @@ def fbconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     access_token = request.data
-    flash ("access token received %s " % access_token)
     app_id = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_id']
     app_secret = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_secret']
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
@@ -230,8 +221,6 @@ def fbconnect():
     url = 'https://graph.facebook.com/v2.4/me?%s&fields=name,id,email' % token
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
-    flash ("url sent for API access:%s"% url)
-    flash ("API JSON result: %s" % result)
     data = json.loads(result)
     login_session['provider'] = 'facebook'
     login_session['username'] = data["name"]
@@ -264,8 +253,6 @@ def fbconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-
-    flash("Now logged in as %s" % login_session['username'])
     return output
 
 
@@ -323,9 +310,7 @@ def gconnect():
 
     # Verify that the access token is valid for this app.
     if result['issued_to'] != CLIENT_ID:
-        response = make_response(
-            json.dumps("Token's client ID does not match app's."), 401)
-        flash ("Token's client ID does not match app's.")
+        response = make_response(json.dumps("Token's client ID does not match app's."), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -367,8 +352,6 @@ def gconnect():
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
-    flash ("done!")
     return output
 
 @app.route('/gdisconnect')

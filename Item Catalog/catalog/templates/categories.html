@@ -1,0 +1,11 @@
+{% extends "base.html"%}
+{% block content %}
+{% for cat in categories %}
+  <button style='margin-bottom:3px;'><a href="{{url_for('showItem', category_id=cat.id)}}">{{cat.name}}</a></button>
+  <br>
+  <button><a href="{{url_for('editCategory', category_id=cat.id)}}">Edit</a></button>
+  <button><a href="{{url_for('deleteCategory', category_id=cat.id)}}">Delete</a></button>
+  <br>
+  <br>
+{%endfor%}
+{% endblock %}

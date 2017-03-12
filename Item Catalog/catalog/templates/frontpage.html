@@ -1,8 +1,4 @@
 {% extends "base.html"%}
 {% block content %}
-{% for cat in categories %}
-  <button><a href="{{url_for('showCategory', category_id=cat.id)}}">{{cat.name}}</a></button>
-  <br>
-  <br>
-{%endfor%}
+<img class="img-responsive" src='https://i.ytimg.com/vi/pz8dOSnD5zo/maxresdefault.jpg'>
 {% endblock %}
