@@ -1,12 +1,14 @@
 # Item_Catalog
 
 Prerequisites:<br>
-Running this project requires basic knowledge of Vagrant and Python<br>
-You must have Python installed <br>
+This project requires basic knowledge of Vagrant, Python, flask and sqlAlchemy<br>
+You must have Python, flask and sqlAlchemy installed <br>
 You must also have Vagrant installed and ready for use with VM box <br>
 If you are not fimiliar with Vagrant visit https://www.vagrantup.com/docs/getting-started/ for more details <br>
 For more details on VM box visit https://www.virtualbox.org/<br>
 Python can be found at https://www.python.org/<br>
+Flask at http://flask.pocoo.org/<br>
+sqlAlchemy can be found at https://www.sqlalchemy.org/<br>
 <br>
 Running the App:
 1. Open up your terminal
