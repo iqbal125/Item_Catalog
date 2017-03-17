@@ -61,8 +61,8 @@ def CategoryJSON(category_id):
 
 @app.route('/category/<int:category_id>/it<int:item_id>/JSON')
 def ItemJSON(category_id, item_id):
-    Item = session.query(Item).filter_by(id=item_id).one()
-    return jsonify(Item=Item.serialize)
+    item = session.query(Item).filter_by(id=item_id).one()
+    return jsonify(Item=item.serialize)
 
 @app.route('/categories/JSON')
 def CategoriesJSON():
@@ -154,6 +154,8 @@ def newItem(category_id):
 @login_required
 def editItem(category_id, item_id):
     editedItem = session.query(Item).filter_by(id=item_id).one()
+    if login_session['user_id'] != editedItem.user_id:
+        return 'You are not authorized to edit this item.'
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -172,6 +174,8 @@ def editItem(category_id, item_id):
 @login_required
 def deleteItem(category_id, item_id):
     itemToDelete = session.query(Item).filter_by(id=item_id).one()
+    if login_session['user_id'] != itemToDelete.user_id:
+        return 'You are not authorized to delete this item.'
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
@@ -370,7 +374,7 @@ def gdisconnect():
         # Reset user's session
         login_session.clear()
         resp = jsonify(status='ok', messege="Successfully Disconnected")
-    else:    
+    else:
         # For whatever reason, the given token was invalid.
         response = make_response(
             json.dumps('Failed to revoke token for given user.'), 400)
