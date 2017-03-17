@@ -11,29 +11,44 @@
  </head>
 <body>
  <div class="container-fluid">
+   <div class="row">
+     <div class="col-md-8"></div>
+     <div class="col-md-2">
+       <p style="text-align:center;padding-top:15px;">
+         {% if 'username' not in session %}
+           <a style='color:#000000;' href="{{url_for('showLogin')}}">Login</a>
+          {% else %}
+           <a style='color:#000000;' href="{{url_for('logout')}}">Logout</a>
+          {% endif %}
+       </p>
+     </div>
+     <div class="col-md-2"></div>
+   </div>
   <div class="row">
-   <div class="col-md-2"></div>
-   <div class="col-md-8">
-     <span class="titleD">Design a High-End CPU</span>
-     {% if user %}
-         <a href="/logout">Logout</a>
-     {% else %}
-       <a href="/login">Login</a>
-     {% endif %}
-     <br>
-     <br>
-     <br>
+   <div class="col-md-4"></div>
+   <div class="col-md-4">
+      <p style="text-align:center;padding:10px;font-size:18px;color:DarkBlue">
+        Design a High-End Computer
+      <p>
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+     <div class="row">
+     <div class="col-md-2"></div>
+     <div class="col-md-8">
      <ul class="NavBarD">
        <li><a href="/">Home</a></li>
-       <li><a href="/category/new/">New Category</a></li>
-       <li><a href='/categories'>Cateogries</a></li>
+       <li><a href="{{url_for('showCategories')}}">Component Classes</a></li>
+       <li><a href="{{url_for('newCategory')}}">New Component Class</a></li>
      </ul>
      <div class="content">
      {% block content %}
      {% endblock %}
      </div>
-    </div>
-   <div class="col-md-2"></div>
+     </div>
+     <div class="col-md-2"></div>
+   </div>
   </div>
  </div>
 </body>

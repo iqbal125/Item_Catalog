@@ -1,14 +1,26 @@
 {% extends "base.html"%}
 {% block content %}
 {% for item in items %}
-  {{item.name}}
   <br>
-  <button><a href="{{url_for('editItem', category_id=item.category_id, item_id=item.id)}}">Edit</a></button>
-  <button><a href="{{url_for('deleteItem', category_id=item.category_id, item_id=item.id)}}">Delete</a></button>
+  <strong>{{item.name}}</strong>
+  <br>
+  {{item.description}}
+  <br>
+  ${{item.price}}
+  <br>
+  <button style="margin-top:10px;padding:5px 15px;font-size:12px;border-radius:4px;border:1px solid;background-color:orange;">
+    <a href="{{url_for('editItem', category_id=item.category_id, item_id=item.id)}}">Edit</a>
+  </button>
+  <button style="margin-top:10px;padding:5px 15px;font-size:12px;border-radius:4px;border:1px solid;background-color:red;">
+    <a href="{{url_for('deleteItem', category_id=item.category_id, item_id=item.id)}}">Delete</a>
+  </button>
   <br>
   <br>
+  <hr>
 {%endfor%}
+<br>
 {%if item%}
-    <button><a href="{{url_for('newItem', category_id=item.category_id)}}">New Item</a></button>
-{%endif%}
+      <a style="padding:8px 20px;font-size:16px;color:white;border-radius:6px;border:1px solid;background-color:green;"
+              href="{{url_for('newItem', category_id=item.category_id)}}">New Item</a>
+{% endif %}
 {% endblock %}

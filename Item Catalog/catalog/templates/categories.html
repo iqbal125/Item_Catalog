@@ -1,11 +1,18 @@
 {% extends "base.html"%}
 {% block content %}
 {% for cat in categories %}
-  <button style='margin-bottom:3px;'><a href="{{url_for('showItem', category_id=cat.id)}}">{{cat.name}}</a></button>
   <br>
-  <button><a href="{{url_for('editCategory', category_id=cat.id)}}">Edit</a></button>
-  <button><a href="{{url_for('deleteCategory', category_id=cat.id)}}">Delete</a></button>
+  <a style="color:#000000;font-size:large;padding:5px;margin:5px;" href="{{url_for('showItem', category_id=cat.id)}}">{{cat.name}}</a>
   <br>
+  <br>
+  <button style="padding:5px 15px;font-size:12px;border-radius:4px;border:1px solid;background-color:orange;">
+    <a href="{{url_for('editCategory', category_id=cat.id)}}">Edit</a>
+  </button>
+  <button style="padding:5px 15px;font-size:12px;border-radius:4px;border:1px solid;background-color:red;">
+    <a href="{{url_for('deleteCategory', category_id=cat.id)}}">Delete</a>
+  </button>
+  <br>
+  <hr>
   <br>
 {%endfor%}
 {% endblock %}
