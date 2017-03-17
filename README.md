@@ -1,6 +1,6 @@
 # Item_Catalog
 
-Prerequisites:
+Prerequisites:<br>
 Running this project requires basic knowledge of Vagrant and Python<br>
 You must have Python installed <br>
 You must also have Vagrant installed and ready for use with VM box <br>
