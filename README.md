@@ -9,10 +9,11 @@ For more details on VM box visit https://www.virtualbox.org/<br>
 Python can be found at https://www.python.org/<br>
 Flask at http://flask.pocoo.org/<br>
 sqlAlchemy can be found at https://www.sqlalchemy.org/<br>
+Download or clone the project files.
 <br>
 Running the App:
 1. Open up your terminal
-2. cd into your Vagrant directory
+2. cd into the Vagrant directory
 3. Run the vagrant up command
 4. Run the vagrant ssh command
 5. cd into the project directory /vagrant/catalog
