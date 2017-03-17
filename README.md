@@ -9,7 +9,7 @@ For more details on VM box visit https://www.virtualbox.org/<br>
 Python can be found at https://www.python.org/<br>
 Flask at http://flask.pocoo.org/<br>
 sqlAlchemy can be found at https://www.sqlalchemy.org/<br>
-Download or clone the project files.
+Download or clone the project files.<br>
 <br>
 Running the App:
 1. Open up your terminal
