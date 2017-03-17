@@ -15,7 +15,7 @@ Running the App:
 4. Run the vagrant ssh command
 5. cd into your project directory
 6. SSH into Vagrant
-7. Run python database_setup.py in terminal
-8. Run python db_start.py in terminal 
-9. Run python main.py in terminal
+7. Run python database_setup.py in the terminal to set up the initial structure of the database
+8. Run python db_start.py in the terminal to populate the database
+9. Run python main.py in the terminal to load the templates and run the app
 10. Go to http://localhost:9000 in your browser to go to the front page.
