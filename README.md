@@ -13,7 +13,7 @@ Running the App:
 2. cd into your Vagrant directory
 3. Run the vagrant up command
 4. Run the vagrant ssh command
-5. cd into your project directory
+5. cd into the project directory /vagrant/catalog
 6. SSH into Vagrant
 7. Run python database_setup.py in the terminal to set up the initial structure of the database
 8. Run python db_start.py in the terminal to populate the database
