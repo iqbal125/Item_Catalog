@@ -20,4 +20,4 @@ Running the App:
 7. Run python database_setup.py in the terminal to set up the initial structure of the database
 8. Run python db_start.py in the terminal to populate the database
 9. Run python main.py in the terminal to load the templates and run the app
-10. Go to http://localhost:9000 in your browser to go to the front page.
+10. Go to http://localhost:9000 in your browser to use the app.
